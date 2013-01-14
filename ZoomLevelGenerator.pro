@@ -15,4 +15,19 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    fileorganizer.cpp \
+    filehandler.cpp
+
+OTHER_FILES += \
+    README.md \
+    COPYING
+
+HEADERS += \
+    fileorganizer.h \
+    filehandler.h
+
+LIBS += -LC:\Qt\4.7.0\lib -lQtGui4
+
+
+

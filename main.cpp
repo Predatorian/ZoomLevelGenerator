@@ -20,10 +20,70 @@
 *  please see <http://www.gnu.org/licenses/>.
 */
 
-
+#include <iostream>
 #include <QtCore/QCoreApplication>
+#include <QString>
+#include <QFileInfo>
+#include "filehandler.h"
+#include "fileorganizer.h"
+
+using namespace std;
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    return a.exec();
+    QString helpmsg="usage: zoomlevelgenerator \"path/to/tiles\" \"path/to/maps/folder\" [-f] [-c r g b]\n";
+            helpmsg+="-f    force recreation of existing tiles\n";
+            helpmsg+="-c    select backgroundcolor ex. \"-c 255 255 255\"";
+    QString srcPath, targetPath;
+    bool force_creation=false, help=false;
+    unsigned char r=33,g=33,b=33;
+    //QCoreApplication a(argc, argv);
+    if(argc>=3)
+      for(int i=3;i<argc;i++)
+      {
+        if(argv[i]=="-f\0")
+        {
+          force_creation=true;
+          continue;
+        }
+        if(argv[i]=="-c")
+        {
+          QString sR=argv[i+1],
+                  sG=argv[i+2],
+                  sB=argv[i+3];
+          r=sR.toUShort();
+          g=sG.toUShort();
+          b=sB.toUShort();
+        }
+        help=true;
+        break;
+      }
+    else
+      help=true;
+
+
+
+    if(help)
+    {
+      cout<<helpmsg.toStdString().c_str();
+      return -1;
+    }
+    srcPath=argv[0];
+    targetPath=argv[1];
+
+    FileHandler fileHandler(33,33,33);
+    FileOrganizer fileOrganizer(srcPath, targetPath);
+    
+    //fileHandler.process("c:/qttest/tile_0_0.png","c:/qttest/tile_1_0.png","c:/qttest/tile_0_1.png","c:/qttest/tile_1_1.png","c:/qttest/google/tile_0_0.png");
+    //attantion tile_X_Y.png
+    while(fileOrganizer.filesLeft())
+    {
+      QString *nextFiles;
+      nextFiles=fileOrganizer.getNext();
+      if(QFileInfo(nextFiles[4]).exists()&&!force_creation)
+        continue;
+      fileHandler.process(nextFiles[0],nextFiles[1],nextFiles[2],nextFiles[3],nextFiles[4]);
+    }
+    return 0;
+    //return a.exec();
 }
