@@ -22,6 +22,10 @@
 #ifndef FILEORGANIZER_H
 #define FILEORGANIZER_H
 #include <QString>
+#include <QDir>
+#include <QPoint>
+#include <QVector>
+#include "structs.h"
 
 class FileOrganizer
 {
@@ -29,6 +33,15 @@ public:
     FileOrganizer(QString srcPath, QString targetPath);
     bool filesLeft();
     QString * getNext();
+    void process();
+private:
+    void readCoords();
+    void createFilePacketList();
+    QDir * sDir;
+    QString tPath;
+    QVector<QPoint>  sFiles;
+    QVector<FilePathPacket> packets;
+
 };
 
 #endif // FILEORGANIZER_H

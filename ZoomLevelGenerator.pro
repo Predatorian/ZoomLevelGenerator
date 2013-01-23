@@ -25,9 +25,11 @@ OTHER_FILES += \
 
 HEADERS += \
     fileorganizer.h \
-    filehandler.h
+    filehandler.h \
+    structs.h
 
 LIBS += -LC:\Qt\4.7.0\lib -lQtGui4
+
 
 
 

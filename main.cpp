@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
           force_creation=true;
           continue;
         }
-        if(argv[i]=="-c")
+        if(!strcmp(argv[i],"-c"))
         {
           QString sR=argv[i+1],
                   sG=argv[i+2],
@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
           r=sR.toUShort();
           g=sG.toUShort();
           b=sB.toUShort();
+          i+=3;
+          continue;
         }
         help=true;
         break;
@@ -68,12 +70,13 @@ int main(int argc, char *argv[])
       cout<<helpmsg.toStdString().c_str();
       return -1;
     }
-    srcPath=argv[0];
-    targetPath=argv[1];
+    srcPath=argv[1];
+    targetPath=argv[2];
 
-    FileHandler fileHandler(33,33,33);
+    FileHandler fileHandler(r,g,b);
     FileOrganizer fileOrganizer(srcPath, targetPath);
-    
+    fileOrganizer.process();
+    return 0;
     //fileHandler.process("c:/qttest/tile_0_0.png","c:/qttest/tile_1_0.png","c:/qttest/tile_0_1.png","c:/qttest/tile_1_1.png","c:/qttest/google/tile_0_0.png");
     //attantion tile_X_Y.png
     while(fileOrganizer.filesLeft())

@@ -20,17 +20,56 @@
 *  please see <http://www.gnu.org/licenses/>.
 */
 #include "fileorganizer.h"
+#include <iostream>
 
 FileOrganizer::FileOrganizer(QString srcPath, QString targetPath)
 {
+    this->sDir= new QDir(srcPath);
+    this->tPath= targetPath;
+    this->sDir->setFilter(QDir::Files);
+    this->process();
 }
 
 bool FileOrganizer::filesLeft()
 {
-    return false;
+    return this->sFiles.size()>0;
 }
 
 QString * FileOrganizer::getNext()
 {
     return new QString[5];
+}
+
+void FileOrganizer::process()
+{
+  this->readCoords();
+}
+
+void FileOrganizer::readCoords()
+{
+    QFileInfoList sList= sDir->entryInfoList();
+    QPoint filePos;
+    QString fileName;
+    int posXstart,posXstop,xLen,posYstart,posYstop,yLen;
+    for(int i=0;i<sList.size();i++)
+    {
+        fileName=sList.at(i).fileName();
+        posXstart=fileName.indexOf("_")+1;
+        posXstop=fileName.indexOf("_",posXstart);
+        xLen=posXstop-posXstart;
+
+        filePos.setX(fileName.mid(posXstart,xLen).toInt());
+
+        posYstart=posXstop+1;
+        posYstop=fileName.indexOf(".",posYstart);
+        yLen=posYstop-posYstart;
+
+        filePos.setY(fileName.mid(posYstart,yLen).toInt());
+        this->sFiles.push_back(filePos);
+    }
+}
+
+void FileOrganizer::createFilePacketList()
+{
+
 }
